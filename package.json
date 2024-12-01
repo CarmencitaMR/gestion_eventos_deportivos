@@ -1,0 +1,18 @@
+{
+  "name": "gestion_eventos_deportivos",
+  "version": "1.0.0",
+  "description": "API proyecto nodeJS",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "mongoose": "^8.8.3",
+    "nodemon": "^3.1.7"
+  }
+}
