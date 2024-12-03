@@ -5,7 +5,6 @@ const eventsSchema = new Schema (
     
 
     {
-        id: {type: Number, require: true},
         name: {type: String, require: true},
         description: {type: String, requiere: true}, 
         date: {type: Date, require: true},

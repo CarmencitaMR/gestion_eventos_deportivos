@@ -6,7 +6,6 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const usersSchema = new Schema (
     
     {
-        id: {type: Number, require: true},
         username: {type: String, require: true, unique: true},
         email: {
             type: String,
@@ -19,7 +18,7 @@ const usersSchema = new Schema (
     },
 
     {
-        collection:"users", // 
+        collection:"users", 
         timestamps: true,
     }
 );
