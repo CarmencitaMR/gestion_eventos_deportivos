@@ -10,6 +10,12 @@ const register = async (req, res) => {
     try{
         //recibo los datos por el body
         const newUser = req.body;  
+
+         //compruebo que el usuario ha sido introducido
+         if (!newUser.username) {
+            return res.status(400).json({ message: "El campo de username es obligatorio, por favor ingrese un username" });
+       }
+
         //Valido que el email ha sido introducido y que tenga el formato definido de mail que especifiqué en el modelo de datos.
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         
@@ -21,25 +27,28 @@ const register = async (req, res) => {
             return res.status(400).json({ message: "El formato de correo electrónico no es válido" });
         }
 
-        //compruebo que el usuario ha sido introducido
-        if (!newUser.username) {
-            return res.status(400).json({ message: "El campo de username es obligatorio, por favor ingrese un username" });
-       }
-
-       //si el usuario ha sido introducido comprueno si existe en la BD, si existe me devuelve  un mensaje indicándolmelo y no existe 1º incripta la contraseña y luego crea ese usuario en la BD.
-     const userDB = await Users.find({username: newUser.username});
+       //si el usuario ha sido introducido compruebo si existe en la BD
+        const userDB = await Users.find({username: newUser.username});
         
         if (userDB.length !== 0){
-            return res.status(400).json({message:"el usuario ya existe"});
+            return res.status(400).json({message:"El usuario ya existe"});
         }
 
+        //si el usuario ha sido introducido compruebo si existe en la BD
+        const userMailDB = await Users.find({email: newUser.email});
+        
+        if (userMailDB.length !== 0){
+            return res.status(400).json({message:"El email ya existe"});
+        }
+
+        //si el usuario no exite encripto la contraseño y creo el usuario en la BD
         newUser.password = await bcryptjs.hash(newUser.password, 10);
         const user = await Users.create(newUser);
         return res.status(201).json(user);
 
     } catch(error){
 
-        return res.status(500).json({message:"error en el servidor", error:error});
+        return res.status(500).json({message:"Error en el servidor", error:error});
     }
 };
 
@@ -47,7 +56,7 @@ const login = async (req, res) => {
     console.log("login");
     //recibo por el body el username y el password
     const { username, password } = req.body;
-    // busco si el username existe en la BD, si no existe envio un mensaje avisando que ese usuario no exite, si existe comparo que el password enviado por el body y el pasword de ese usario en la BD coincidan, para ello necesito la función compare al estar el password encriptado en la BD.
+    // busco si el username existe en la BD, si no existe envio un mensaje avisando que ese usuario no exite, si existe comparo que el password enviado por el body y el password de ese usario en la BD coincidan, para ello necesito la función compare al estar el password encriptado en la BD.
     const userDB = await Users.findOne({username: username});
 
     if(!userDB){
@@ -55,7 +64,7 @@ const login = async (req, res) => {
     }
     
     const samePassword = await bcryptjs.compare(password, userDB.password);
-    // si la contrseña no coincide envio un mensjae avisándolo. Si existe creo el token con los datos de ese usuario.
+    // si la contrseña no coincide envío un mensjae avisándolo. Si existe creo el token con los datos de ese usuario.
     if(!samePassword){
         return res.status(400).json({message:"La contraseña no existe"});
     }
@@ -66,6 +75,18 @@ const login = async (req, res) => {
     })   
 };
 
+const getProfile = async (req, res) => {
+    console.log("getProfile");
+
+    //busco al usuario por ID con los datos de id que me llegan del token en user(req.user) y los devuelvo como respuesta.
+    try{
+        const dataUser = await Users.findById({_id:req.user.id});
+        return res.status(200).json(dataUser);
+    }catch(error){
+        return res.status(500).json({message:"Error en el servidor", error:error});
+    }
+};
 
 
-module.exports = { register, login };
+
+module.exports = { register, login, getProfile };
