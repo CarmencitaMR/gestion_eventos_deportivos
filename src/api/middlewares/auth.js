@@ -36,7 +36,7 @@ const checkTokenAdmin = async (req, res, next) => {
     //confirmo que me ha llegado por la propiedad headers del request un token.
     try {
         if (!req.headers["authorization"]) {
-            return res.status(400).json({ message: "debe incluir el token" });
+            return res.status(400).json({ message: "Debe incluir el token" });
         }
         const token = req.headers["authorization"]
 
