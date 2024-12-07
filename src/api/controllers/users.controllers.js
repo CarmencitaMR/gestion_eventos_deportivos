@@ -70,7 +70,7 @@ const login = async (req, res) => {
     }
 
     return res.status(200).json({
-        message:"El login se ha realizo con éxito",
+        message:"El login se ha creado con éxito",
         token: createToken(userDB)    
     })   
 };

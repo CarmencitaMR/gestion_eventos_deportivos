@@ -11,7 +11,7 @@ const eventsSchema = new Schema (
         location: {type: String, require: true},
         sport: {type: String, require: true},
         organizer: {type: Schema.Types.ObjectId, ref: "users"},
-        image: {type: String, default: '' },
+        image: {type: [String], default: '' },
     },
 
     {

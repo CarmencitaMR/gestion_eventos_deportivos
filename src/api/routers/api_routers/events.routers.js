@@ -7,7 +7,7 @@ const { createEvent, getAllEvents, getEventById, deleteEventById, updateEventByI
 
 
 
-router.post("/", checkToken, uploadImg.single("image"), createEvent); 
+router.post("/", checkToken, uploadImg.array("image", 3), createEvent); 
 router.get("/", checkToken, getAllEvents);
 router.get("/:id", checkToken, getEventById);
 router.delete("/:id", checkTokenAdmin, deleteEventById);

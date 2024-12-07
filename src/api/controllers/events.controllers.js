@@ -24,11 +24,18 @@ const createEvent = async (req, res) => {
         if (eventDB.length !== 0) {
             return res.status(400).json({ message: "El evento ya existe" });
         }
-        //si existe es que cloudinay me ha genrado correctamente la url
-        if (req.file.path) {
+        
+        
+        //si existeN es que cloudinay me ha genrado correctamente la urls
+
+        const imageUrls = req.files.map(file => file.path); // Obtiene las URLs de las imágenes subidas
+        newEvent.image = imageUrls;
+        /*if (req.file.path) {
             console.log(req.file.path);
             newEvent.image = req.file.path;
-        }
+        }*/
+
+       
 
         const createEvent = await newEvent.save();
         return res.status(201).json(createEvent);
@@ -107,6 +114,14 @@ const updateEventById = async (req, res) => {
         const id = req.params.id;
         const event = req.body;
 
+
+        // Verificar si el id enviado en la url coincide con el id de una evento en la BD
+        const idDB = await Events.find({_id: id});
+        if (idDB.length === 0) {
+        return res.status(400).json({ message: "No existe un evento con ese ID" });
+        }
+
+           // busca el evento que corresponda al id enviado por la url y lo actuliza con los datos guardado en la variable event que llegan por el body
         const updatedEvent = await Events.findByIdAndUpdate(id, event, {new:true});
         return res.status(200).json({message: `El evento ${updatedEvent.id} se ha modificado con éxito`, updatedEvent});
 
