@@ -4,7 +4,6 @@ const Events = require("../models/events.model");
 
 const createEvent = async (req, res) => {
 
-
     try {
 
         //compruebo si el usuario ha sido introducido
@@ -30,13 +29,10 @@ const createEvent = async (req, res) => {
 
         const imageUrls = req.files.map(file => file.path); // Obtiene las URLs de las imágenes subidas
         newEvent.image = imageUrls;
-        /*if (req.file.path) {
-            console.log(req.file.path);
-            newEvent.image = req.file.path;
-        }*/
 
-
-
+        // asigno el id del usuario logado para crear este evento al campo organizer que esta relacionado con la collecion users en el modelo de datos
+        newEvent.organizer = req.user.id;
+      
         const createEvent = await newEvent.save();
         return res.status(201).json(createEvent);
 
@@ -46,6 +42,44 @@ const createEvent = async (req, res) => {
     }
 
 };
+
+
+
+    /*try {
+
+        //compruebo si el usuario ha sido introducido
+        const newEvent = new Events(req.body);
+
+        if (!newEvent.name) {
+            return res.status(400).json({ message: "El campo de nombre es obligatorio, por favor ingrese un nobre para el evento" });
+        }
+
+        //compruebo si la fecha ha sido introducida
+        if (!newEvent.date) {
+            return res.status(400).json({ message: "El campo de fecha es obligatorio, por favor ingrese la fecha del evento" });
+        }
+
+        //compruebo si el evento ya existe en la BD
+        const eventDB = await Events.find({ name: newEvent.name });
+        if (eventDB.length !== 0) {
+            return res.status(400).json({ message: "El evento ya existe" });
+        }
+
+
+        //si existeN es que cloudinay me ha genrado correctamente la urls
+
+        const imageUrls = req.files.map(file => file.path); // Obtiene las URLs de las imágenes subidas
+        newEvent.image = imageUrls;
+      
+        const createEvent = await newEvent.save();
+        return res.status(201).json(createEvent);
+
+    } catch (error) {
+
+        return res.status(500).json({ message: "Error en el servidor", error: error });
+    }
+
+};*/
 
 
 const getAllEvents = async (req, res) => {
@@ -132,6 +166,27 @@ const updateEventById = async (req, res) => {
 };
 
 
+const getUpcomingEvents = async (req, res) => {
+
+    console.log("getUpcomingEvents");
+
+    try {
+    
+    // busca en la BD los eventos mostrando _id, name, description y date ordenados de manera ascendente y devolviendo los los 3 primeros, por lo que devuelve los eventos próximos.
+    const filteredUpcomingEvents = await Events.find({}, {_id: 1, name: 1, description: 1, date: 1}).sort({date: 1}).limit (3);
+    // si el array esta´vacío es que no hay eventos en la BD
+    if(!filteredUpcomingEvents){
+        return res.status(400).json({ message: "No hay eventos próximos en para las próximas fechas" });
+    }
+    return res.status(200).json(filteredUpcomingEvents);
+
+    }catch (error) {
+
+        return res.status(500).json({ message: "Error en el servidor", error: error });
+   }
+};
+
+
 const getBySportType = async (req, res) => {
 
     console.log("getBySportType");
@@ -184,4 +239,6 @@ const getByDateRange = async (req, res) =>{
 
 
 
-    module.exports = { createEvent, getAllEvents, getEventById, deleteEventById, updateEventById, getBySportType, getByDateRange };
+
+
+    module.exports = { createEvent, getAllEvents, getEventById, deleteEventById, updateEventById, getBySportType, getByDateRange, getUpcomingEvents };

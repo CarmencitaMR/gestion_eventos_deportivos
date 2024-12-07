@@ -3,9 +3,9 @@ const router = express.Router();
 
 const uploadImg = require("../../middlewares/upload.file");
 const { checkToken, checkTokenAdmin } = require("../../middlewares/auth");
-const { createEvent, getAllEvents, getEventById, deleteEventById, updateEventById, getBySportType, getByDateRange} = require("../../controllers/events.controllers");
+const { createEvent, getAllEvents, getEventById, deleteEventById, updateEventById, getBySportType, getByDateRange, getUpcomingEvents} = require("../../controllers/events.controllers");
 
-
+router.get("/upcoming", getUpcomingEvents);
 router.get("/sport", getBySportType);
 router.get("/date", getByDateRange);
 
