@@ -24,8 +24,8 @@ const createEvent = async (req, res) => {
         if (eventDB.length !== 0) {
             return res.status(400).json({ message: "El evento ya existe" });
         }
-        
-        
+
+
         //si existeN es que cloudinay me ha genrado correctamente la urls
 
         const imageUrls = req.files.map(file => file.path); // Obtiene las URLs de las imágenes subidas
@@ -35,7 +35,7 @@ const createEvent = async (req, res) => {
             newEvent.image = req.file.path;
         }*/
 
-       
+
 
         const createEvent = await newEvent.save();
         return res.status(201).json(createEvent);
@@ -91,15 +91,15 @@ const deleteEventById = async (req, res) => {
         const id = req.params.id
 
         // Verificar si el id enviado en la url coincide con el id de una evento en la BD
-        const eventDB = await Events.find({_id: id});
+        const eventDB = await Events.find({ _id: id });
         if (eventDB.length === 0) {
             return res.status(400).json({ message: "No existe un evento con ese ID" });
         }
 
         // busca el evento que corresponda al id enviado por la url y lo elimina
         const eventById = await Events.findByIdAndDelete(id);
-    
-        return res.status(200).json({message: `El evento ${eventById.name} se ha eliminado con éxito`});
+
+        return res.status(200).json({ message: `El evento ${eventById.name} se ha eliminado con éxito` });
 
     } catch (error) {
 
@@ -110,27 +110,78 @@ const deleteEventById = async (req, res) => {
 
 const updateEventById = async (req, res) => {
     console.log("update");
-    try{
+    try {
         const id = req.params.id;
         const event = req.body;
 
 
         // Verificar si el id enviado en la url coincide con el id de una evento en la BD
-        const idDB = await Events.find({_id: id});
+        const idDB = await Events.find({ _id: id });
         if (idDB.length === 0) {
-        return res.status(400).json({ message: "No existe un evento con ese ID" });
+            return res.status(400).json({ message: "No existe un evento con ese ID" });
         }
 
-           // busca el evento que corresponda al id enviado por la url y lo actuliza con los datos guardado en la variable event que llegan por el body
-        const updatedEvent = await Events.findByIdAndUpdate(id, event, {new:true});
-        return res.status(200).json({message: `El evento ${updatedEvent.id} se ha modificado con éxito`, updatedEvent});
+        // busca el evento que corresponda al id enviado por la url y lo actuliza con los datos guardado en la variable event que llegan por el body
+        const updatedEvent = await Events.findByIdAndUpdate(id, event, { new: true });
+        return res.status(200).json({ message: `El evento ${updatedEvent.id} se ha modificado con éxito`, updatedEvent });
 
-    }catch(error){
+    } catch (error) {
 
-        return res.status(500).json({ message: "Error en el servidor", error: error });    
+        return res.status(500).json({ message: "Error en el servidor", error: error });
     }
 };
 
 
+const getBySportType = async (req, res) => {
 
-module.exports = { createEvent, getAllEvents, getEventById, deleteEventById, updateEventById };
+    console.log("getBySportType");
+
+    try {
+        
+        //envío los parametros por query params
+        const sport = req.query.sport;
+
+        //verifico que se ha enviado un parametro
+        if (!sport) {
+            return res.status(400).json({ message: "El parámetro sport es obligatorio" });
+        }
+
+        //busco en la BD si exíste el deporte
+        const filtedEvent = await Events.find({ sport: { $regex: sport, $options: "i" } });
+
+        //si me devuelve el array vacío es que no existe
+        if (filtedEvent.length === 0) {
+            return res.status(400).json({ message: "El tipo de deporte no existe" });
+        }
+        
+        return res.status(200).json(filtedEvent);
+
+    } catch (error) {
+
+        return res.status(500).json({ message: "Error en el servidor", error: error });
+    }
+};
+
+const getByDateRange = async (req, res) =>{
+    console.log("getByDateRange");
+
+    const { from, to } = req.query;
+
+    // Validar que se recibieron las fechas
+    if (!from || !to) {
+        return res.status(400).json({ error: 'Se necesitan los parametros del rango de fechas from y to' });
+    }
+
+    const filteredDates = await Events.find({
+        date: {
+            $gte: from,
+            $lte: to
+        }
+    });
+    return res.json(filteredDates);
+
+};
+
+
+
+    module.exports = { createEvent, getAllEvents, getEventById, deleteEventById, updateEventById, getBySportType, getByDateRange };
