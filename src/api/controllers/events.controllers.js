@@ -13,26 +13,25 @@ const createEvent = async (req, res) => {
             return res.status(400).json({ message: "El campo de nombre es obligatorio, por favor ingrese un nobre para el evento" });
         }
 
-        //compruebo si la fecha ha sido introducida
-        if (!newEvent.date) {
-            return res.status(400).json({ message: "El campo de fecha es obligatorio, por favor ingrese la fecha del evento" });
-        }
-
         //compruebo si el evento ya existe en la BD
         const eventDB = await Events.find({ name: newEvent.name });
         if (eventDB.length !== 0) {
             return res.status(400).json({ message: "El evento ya existe" });
         }
 
+         // Validación de la fecha
+        if (!newEvent.date) {
+            return res.status(400).json({ message: "El campo de fecha es obligatorio, por favor ingrese una fecha con formato año, mes, día: 2024-12-01" });
+        }
 
-        //si existeN es que cloudinay me ha genrado correctamente la urls
-
+        //si existen es que cloudinay me ha genrado correctamente la urls
         const imageUrls = req.files.map(file => file.path); // Obtiene las URLs de las imágenes subidas
         newEvent.image = imageUrls;
 
         // asigno el id del usuario logado para crear este evento al campo organizer que esta relacionado con la collecion users en el modelo de datos
         newEvent.organizer = req.user.id;
-      
+        
+        //creo el evento en la BD
         const createEvent = await newEvent.save();
         return res.status(201).json(createEvent);
 
@@ -42,45 +41,6 @@ const createEvent = async (req, res) => {
     }
 
 };
-
-
-
-    /*try {
-
-        //compruebo si el usuario ha sido introducido
-        const newEvent = new Events(req.body);
-
-        if (!newEvent.name) {
-            return res.status(400).json({ message: "El campo de nombre es obligatorio, por favor ingrese un nobre para el evento" });
-        }
-
-        //compruebo si la fecha ha sido introducida
-        if (!newEvent.date) {
-            return res.status(400).json({ message: "El campo de fecha es obligatorio, por favor ingrese la fecha del evento" });
-        }
-
-        //compruebo si el evento ya existe en la BD
-        const eventDB = await Events.find({ name: newEvent.name });
-        if (eventDB.length !== 0) {
-            return res.status(400).json({ message: "El evento ya existe" });
-        }
-
-
-        //si existeN es que cloudinay me ha genrado correctamente la urls
-
-        const imageUrls = req.files.map(file => file.path); // Obtiene las URLs de las imágenes subidas
-        newEvent.image = imageUrls;
-      
-        const createEvent = await newEvent.save();
-        return res.status(201).json(createEvent);
-
-    } catch (error) {
-
-        return res.status(500).json({ message: "Error en el servidor", error: error });
-    }
-
-};*/
-
 
 const getAllEvents = async (req, res) => {
 
@@ -127,7 +87,7 @@ const deleteEventById = async (req, res) => {
         // Verificar si el id enviado en la url coincide con el id de una evento en la BD
         const eventDB = await Events.find({ _id: id });
         if (eventDB.length === 0) {
-            return res.status(400).json({ message: "No existe un evento con ese ID" });
+            return res.status(404).json({ message: "No existe un evento con ese ID" });
         }
 
         // busca el evento que corresponda al id enviado por la url y lo elimina
@@ -152,7 +112,7 @@ const updateEventById = async (req, res) => {
         // Verificar si el id enviado en la url coincide con el id de una evento en la BD
         const idDB = await Events.find({ _id: id });
         if (idDB.length === 0) {
-            return res.status(400).json({ message: "No existe un evento con ese ID" });
+            return res.status(404).json({ message: "No existe un evento con ese ID" });
         }
 
         // busca el evento que corresponda al id enviado por la url y lo actuliza con los datos guardado en la variable event que llegan por el body
@@ -165,7 +125,6 @@ const updateEventById = async (req, res) => {
     }
 };
 
-
 const getUpcomingEvents = async (req, res) => {
 
     console.log("getUpcomingEvents");
@@ -176,7 +135,7 @@ const getUpcomingEvents = async (req, res) => {
     const filteredUpcomingEvents = await Events.find({}, {_id: 1, name: 1, description: 1, date: 1}).sort({date: 1}).limit (3);
     // si el array esta´vacío es que no hay eventos en la BD
     if(!filteredUpcomingEvents){
-        return res.status(400).json({ message: "No hay eventos próximos en para las próximas fechas" });
+        return res.status(404).json({ message: "No hay eventos próximos en para las próximas fechas" });
     }
     return res.status(200).json(filteredUpcomingEvents);
 
@@ -185,7 +144,6 @@ const getUpcomingEvents = async (req, res) => {
         return res.status(500).json({ message: "Error en el servidor", error: error });
    }
 };
-
 
 const getBySportType = async (req, res) => {
 
@@ -206,7 +164,7 @@ const getBySportType = async (req, res) => {
 
         //si me devuelve el array vacío es que no existe
         if (filtedEvent.length === 0) {
-            return res.status(400).json({ message: "El tipo de deporte no existe" });
+            return res.status(404).json({ message: "El tipo de deporte no existe" });
         }
         
         return res.status(200).json(filtedEvent);
@@ -233,7 +191,7 @@ const getByDateRange = async (req, res) =>{
             $lte: to
         }
     });
-    return res.json(filteredDates);
+    return res.status(200).json(filteredDates);
 
 };
 
@@ -241,4 +199,4 @@ const getByDateRange = async (req, res) =>{
 
 
 
-    module.exports = { createEvent, getAllEvents, getEventById, deleteEventById, updateEventById, getBySportType, getByDateRange, getUpcomingEvents };
+module.exports = { createEvent, getAllEvents, getEventById, deleteEventById, updateEventById, getBySportType, getByDateRange, getUpcomingEvents };

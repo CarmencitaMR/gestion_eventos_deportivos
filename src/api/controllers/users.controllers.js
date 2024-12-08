@@ -5,8 +5,6 @@ const { createToken } = require("../../utils/jwt");
 
 const register = async (req, res) => {
 
-    console.log("register");
-
     try{
         //recibo los datos por el body
         const newUser = req.body;  
@@ -53,34 +51,38 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-    console.log("login");
+   
     //recibo por el body el username y el password
     const { username, password } = req.body;
     // busco si el username existe en la BD, si no existe envio un mensaje avisando que ese usuario no exite, si existe comparo que el password enviado por el body y el password de ese usario en la BD coincidan, para ello necesito la función compare al estar el password encriptado en la BD.
     const userDB = await Users.findOne({username: username});
 
     if(!userDB){
-        return res.status(400).json({message:"El usuario no existe"});
+        return res.status(404).json({message:"El usuario no existe"});
     }
     
     const samePassword = await bcryptjs.compare(password, userDB.password);
     // si la contrseña no coincide envío un mensjae avisándolo. Si existe creo el token con los datos de ese usuario.
     if(!samePassword){
-        return res.status(400).json({message:"La contraseña no existe"});
+        return res.status(404).json({message:"La contraseña no existe"});
     }
 
     return res.status(200).json({
-        message:"El login se ha creado con éxito",
+        message:"El login se ha realizado con éxito",
         token: createToken(userDB)    
     })   
 };
 
 const getProfile = async (req, res) => {
-    console.log("getProfile");
 
     //busco al usuario por ID con los datos de id que me llegan del token en user(req.user) y los devuelvo como respuesta.
     try{
         const dataUser = await Users.findById({_id:req.user.id});
+
+        if(!dataUser){
+            return res.status(404).json({message:"El usuario no existe"});
+        }
+
         return res.status(200).json(dataUser);
     }catch(error){
         return res.status(500).json({message:"Error en el servidor", error:error});
