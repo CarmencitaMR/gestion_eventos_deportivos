@@ -9,6 +9,7 @@ router.get("/upcoming", getUpcomingEvents);
 router.get("/sport", getBySportType);
 router.get("/date", getByDateRange);
 
+
 router.post("/", checkToken, uploadImg.array("image", 3), createEvent); 
 router.get("/", checkToken, getAllEvents);
 router.get("/:id", checkToken, getEventById);

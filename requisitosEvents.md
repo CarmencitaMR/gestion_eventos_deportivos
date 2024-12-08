@@ -16,20 +16,20 @@ Respuesta:
 
 ```json
 {
-  "name": "VII Campeonato Patinaje Artístico",
+  "_id": "675567452ffa77c2d041e187",
+  "name": "VI Campeonato Patinaje Artístico",
   "description": "Campeonato de Patinaje Artítico todas las modalidades",
   "date": "2025-02-28T00:00:00.000Z",
   "location": "Madrid",
   "sport": "Patinaje Artístico",
   "image": [
-    "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733655018/img_events/pxhccaa3bwsgekcgynjo.png",
-    "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733655018/img_events/c9nmy04p1njitokxtkxi.png",
-    "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733655019/img_events/tztxhwbghbxz3hcje9vf.png"
+    "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733650243/img_events/e9787wn3gwovi8dvidu4.png",
+    "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733650245/img_events/kkdv4mntq80fz729qecj.png",
+    "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733650244/img_events/hxqxsxad9ydpjkgvnrbs.png"
   ],
-  "_id": "675579ec9ee31f1c72b75ecf",
-  "organizer": "6752dc4cd0c69997aa4e593c",
-  "createdAt": "2024-12-08T10:50:20.371Z",
-  "updatedAt": "2024-12-08T10:50:20.371Z",
+  "organizer": "6752def53a33cc62413a3451",
+  "createdAt": "2024-12-08T09:30:45.640Z",
+  "updatedAt": "2024-12-08T09:30:45.640Z",
   "__v": 0
 }
 ```
@@ -102,7 +102,7 @@ Respuesta:
 {
   "_id": "67546f2428fde1c56edc9f92",
   "name": "III Torneo de Esgrima",
-  "description": "Torno de Esgrima",
+  "description": "Torneo de Esgrima",
   "date": "2025-02-25T00:00:00.000Z",
   "location": "Madrid",
   "sport": "Esgrima",
@@ -135,26 +135,6 @@ Respuesta:
 - Un objeto con el mensaje y el evento buscado por su id actualilado
 
 ```json
-//evento antes de la actuliazación
-{
-  "_id": "67546f2428fde1c56edc9f92",
-  "name": "III Torneo de Esgrima",
-  "description": "Torno de Esgrima",
-  "date": "2025-02-25T00:00:00.000Z",
-  "location": "Madrid",
-  "sport": "Esgrima",
-  "image": [
-    "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733586722/img_events/ogo8fvgkds3fevyt0unk.png",
-    "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733586723/img_events/fdwt6izqz4dvozxxrdui.png",
-    "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733586724/img_events/dmeiwm1ztv2ybh2h9b7w.png"
-  ],
-  "organizer": "6752def53a33cc62413a3451",
-  "createdAt": "2024-12-07T15:52:04.863Z",
-  "updatedAt": "2024-12-07T15:52:04.863Z",
-  "__v": 0
-}
-
-// evento actualizado
 {
   "message": "El evento 675583d7db54243bb6c116e8 se ha modificado con éxito",
   "updatedEvent": {
@@ -189,18 +169,193 @@ HEADERS: "Authorization": "Bearer TOKEN"
 
 Respuesta:
 
-- Un objeto con el mensaje y el evento buscado por su id actualilado
+- Un objeto con el mensaje de elminación del evento seleccionado por ID
 
-# A tener en cuenta
+```json
+{
+  "message": "El evento III Campeonato Patinaje Artístico se ha eliminado con éxito"
+}
+```
 
-- No tenemos ningún fichero para monitores (rutas, controller, modelo)
-- Hay que crear la ruta base /api/monitores (api.routes)
-- Cuanto más trabajo hagamos en el modelo, más sencillo será el controlador (Fat Model Skinny Controller);
+## Recuperación eventos proximos
+
+URL: /api/events/upcoming
+
+MÉTODO: GET
+
+Respuesta:
+
+- Un array de objetos con los eventos y datos de \_id, name, description y date de los eventos más proximos, en este caso limitado a 3 resultados.
+
+```json
+[
+  {
+    "_id": "67546e1928fde1c56edc9f8e",
+    "name": "VI Encuentro de Piraguismo en tu ciudad",
+    "description": "Piraguismo en tu ciudad",
+    "date": "2025-01-30T00:00:00.000Z"
+  },
+  {
+    "_id": "67546f2428fde1c56edc9f92",
+    "name": "III Torneo de Esgrima",
+    "description": "Torno de Esgrima",
+    "date": "2025-02-25T00:00:00.000Z"
+  },
+  {
+    "_id": "6754727228fde1c56edc9fad",
+    "name": "II Campeonato Patinaje Artístico",
+    "description": "Campeonato de Patinaje Artítico todas las modalidades",
+    "date": "2025-02-28T00:00:00.000Z"
+  }
+]
+```
+
+## Recuperación eventos por tipo de deporte
+
+URL: /api/events/sport
+
+req.query.sport -> deporte a buscar admite consultas flexibles con coincidencias en el campo sport
+
+MÉTODO: GET
+
+Respuesta:
+
+- Un objeto o array de objetos con el o los eventos y datos del evento o de los eventos que contengan en el campo sport el texto enviado por los query params.
+
+```json
+[
+  {
+    "_id": "67546f2428fde1c56edc9f92",
+    "name": "III Torneo de Esgrima",
+    "description": "Torneo de Esgrima",
+    "date": "2025-02-25T00:00:00.000Z",
+    "location": "Madrid",
+    "sport": "Esgrima",
+    "image": [
+      "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733586722/img_events/ogo8fvgkds3fevyt0unk.png",
+      "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733586723/img_events/fdwt6izqz4dvozxxrdui.png",
+      "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733586724/img_events/dmeiwm1ztv2ybh2h9b7w.png"
+    ],
+    "organizer": "6752def53a33cc62413a3451",
+    "createdAt": "2024-12-07T15:52:04.863Z",
+    "updatedAt": "2024-12-07T15:52:04.863Z",
+    "__v": 0
+  },
+  {
+    "_id": "675583d7db54243bb6c116e8",
+    "name": "V Torneo Anual de Esgrima",
+    "description": " Torneo anual de Esgrima",
+    "date": "2025-02-28T00:00:00.000Z",
+    "location": "Madrid",
+    "sport": "Esgrima",
+    "image": [
+      "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733657557/img_events/crzqnyda4xrgvqvy40ew.png",
+      "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733657558/img_events/fj3ijvhqxelyagqiizdh.png",
+      "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733657558/img_events/kzimpqsex50knwcsfmj8.png"
+    ],
+    "organizer": "67517c479726947450a67adc",
+    "createdAt": "2024-12-08T11:32:39.515Z",
+    "updatedAt": "2024-12-08T11:39:37.933Z",
+    "__v": 0
+  }
+]
+```
+
+## Recuperación eventos por tipo rango de fechas
+
+URL: /api/events/date
+
+req.query.from-> fecha desde la que se quiere buscar
+req.query.to-> fecha hasta la que se quiere buscar
+
+MÉTODO: GET
+
+Respuesta:
+
+- Un objeto o array de objetos con el o los eventos y datos del evento o de los eventos contenidos entre las fechas indicadas.
+
+```json
+[
+  {
+    "_id": "67546f2428fde1c56edc9f92",
+    "name": "III Torneo de Esgrima",
+    "description": "Torno de Esgrima",
+    "date": "2025-02-25T00:00:00.000Z",
+    "location": "Madrid",
+    "sport": "Esgrima",
+    "image": [
+      "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733586722/img_events/ogo8fvgkds3fevyt0unk.png",
+      "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733586723/img_events/fdwt6izqz4dvozxxrdui.png",
+      "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733586724/img_events/dmeiwm1ztv2ybh2h9b7w.png"
+    ],
+    "organizer": "6752def53a33cc62413a3451",
+    "createdAt": "2024-12-07T15:52:04.863Z",
+    "updatedAt": "2024-12-07T15:52:04.863Z",
+    "__v": 0
+  },
+  {
+    "_id": "6754727228fde1c56edc9fad",
+    "name": "II Campeonato Patinaje Artístico",
+    "description": "Campeonato de Patinaje Artítico todas las modalidades",
+    "date": "2025-02-28T00:00:00.000Z",
+    "location": "Madrid",
+    "sport": "Patinaje Artístico",
+    "image": [
+      "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733587567/img_events/mjq3mbulbcazc7jrr7sr.png",
+      "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733587568/img_events/hfzk8va3mky5qea1wesx.png",
+      "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733587569/img_events/roqrnbpzqgs2tq77vowi.png"
+    ],
+    "organizer": "67517a732800269dcf063f34",
+    "createdAt": "2024-12-07T16:06:10.171Z",
+    "updatedAt": "2024-12-07T16:06:10.171Z",
+    "__v": 0
+  },
+  {
+    "_id": "675567452ffa77c2d041e187",
+    "name": "VI Campeonato Patinaje Artístico",
+    "description": "Campeonato de Patinaje Artítico todas las modalidades",
+    "date": "2025-02-28T00:00:00.000Z",
+    "location": "Madrid",
+    "sport": "Patinaje Artístico",
+    "image": [
+      "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733650243/img_events/e9787wn3gwovi8dvidu4.png",
+      "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733650245/img_events/kkdv4mntq80fz729qecj.png",
+      "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733650244/img_events/hxqxsxad9ydpjkgvnrbs.png"
+    ],
+    "organizer": "6752def53a33cc62413a3451",
+    "createdAt": "2024-12-08T09:30:45.640Z",
+    "updatedAt": "2024-12-08T09:30:45.640Z",
+    "__v": 0
+  },
+  {
+    "_id": "675583d7db54243bb6c116e8",
+    "name": "V Torneo Anual de Esgrima",
+    "description": " Torneo anual de Esgrima",
+    "date": "2025-02-28T00:00:00.000Z",
+    "location": "Madrid",
+    "sport": "Esgrima",
+    "image": [
+      "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733657557/img_events/crzqnyda4xrgvqvy40ew.png",
+      "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733657558/img_events/fj3ijvhqxelyagqiizdh.png",
+      "https://res.cloudinary.com/dbpa0ihrj/image/upload/v1733657558/img_events/kzimpqsex50knwcsfmj8.png"
+    ],
+    "organizer": "67517c479726947450a67adc",
+    "createdAt": "2024-12-08T11:32:39.515Z",
+    "updatedAt": "2024-12-08T11:39:37.933Z",
+    "__v": 0
+  }
+]
+```
 
 # Creación del CRUD
 
-- [x] Generación fichero routes/api.routes.js
-- [x] Desde app.js mandamos todas las peticiones que empiezan por /api al fichero anterior
-- [x] Generación fichero routes/api/clientes.routes.js
-- [x] Desde api.routes.js mandamos todas las peticiones que empiezan por /api/clientes al fichero anterior
-- Generar el controlador, los métodos necesarios y las rutas en el fichero clientes.routes.js
+- [x] Generación fichero routes/routes.js
+- [x] Generación fichero routers/api_routers/events.routes.js
+- [x] Desde routers/api_routers/events.routes.js mandamos todas las peticiones a routes/routes.js
+- [x] Generación fichero controllers/events.controllers con las funciones que se ejecutarán en los endpoint definidos en routers/api_routers/events.routes.js
+- [x] Desde index.js mandamos todas las peticiones que empiezan por api/ y enlazan a su vez con events/ en el fichero routes/routes.js que a su vez enlazan con los endpoints definidos en el fichero/api_routers/events.routes.js
+
+# A tener en cuenta
+
+- El número máximo de imganes a subir por evento son 3
+- Se necesara tener el role de Admin para poder realizar el DELETE del CRUD

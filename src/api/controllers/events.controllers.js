@@ -85,6 +85,7 @@ const deleteEventById = async (req, res) => {
         const id = req.params.id
 
         // Verificar si el id enviado en la url coincide con el id de una evento en la BD
+    
         const eventDB = await Events.find({ _id: id });
         if (eventDB.length === 0) {
             return res.status(404).json({ message: "No existe un evento con ese ID" });

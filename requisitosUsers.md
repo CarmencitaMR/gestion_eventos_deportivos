@@ -74,3 +74,11 @@ Respuesta:
   "__v": 0
 }
 ```
+
+# A tener en cuenta
+
+- el role está definado por defecto como organizador
+
+- El tiempo de validez del Token está establecido en 30 min
+
+- La endpoint api/users/profile es una ruta protegida
