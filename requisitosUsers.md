@@ -1,6 +1,6 @@
 # API Users
 
-## Crear un nuevo usuario
+## Creación de un nuevo usuario
 
 URL: /api/users/register
 
@@ -12,7 +12,7 @@ BODY: name, lastname, username, email, password, role
 
 Respuesta:
 
-- Responde con un objeto con los datos del usuario registrado, el \_id generado y la contraseña encriptada.
+- Responde con un objeto con los datos del usuario registrado, el \_id generado y la contraseña encriptada. El rol por defecto es organizador, exite la opción de admin.
 
 ```json
 {
@@ -81,4 +81,4 @@ Respuesta:
 
 - El tiempo de validez del Token está establecido en 30 min
 
-- La endpoint api/users/profile es una ruta protegida
+- El endpoint api/users/profile es una ruta protegida

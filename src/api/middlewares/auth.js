@@ -52,7 +52,7 @@ const checkTokenAdmin = async (req, res, next) => {
             return res.status(400).json({ message: "el usuario no exite" });
         }
 
-        //conpruba si el role, ya que solo lo que tiene un role de admin pueden acceder a esta ruta privada
+        //compruba si el role, ya que solo lo que tiene un role de admin pueden acceder a esta ruta privada
         if (user.role !== "admin"){
             return res.status(403).json({message: "Se necesita el role de Administrador para acceder a esta ruta"});
         }

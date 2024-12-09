@@ -36,7 +36,7 @@ Respuesta:
 
 ## Recuperación de todos los eventos
 
-URL: /api/events
+URL: /api/events/getAllEvents
 
 MÉTODO: GET
 
@@ -87,12 +87,13 @@ Respuesta:
 
 ## Recuperación de un evento por su ID
 
-URL: /api/events/:id
+URL: /api/events/getEventById/:id
+
 req.params.id -> ID del evento a recuperar
 
 MÉTODO: GET
 
-HEADERS: HEADERS: Authorization: "Bearer TOKEN"
+HEADERS: Authorization: "Bearer TOKEN"
 
 Respuesta:
 
@@ -128,11 +129,11 @@ MÉTODO: PUT
 
 HEADERS: {Content-Type: application/json, "Authorization": "Bearer TOKEN"}
 
-BODY: las propiedad que quiera actulizadar. Ejemplo name, description
+BODY: las propiedades que quiera actualizar. Ejemplo name, description
 
 Respuesta:
 
-- Un objeto con el mensaje y el evento buscado por su id actualilado
+- Un objeto con el mensaje y el evento buscado por su id actualizado
 
 ```json
 {
@@ -165,7 +166,7 @@ req.params.id -> ID del cliente a eliminar
 
 MÉTODO: DELETE
 
-HEADERS: "Authorization": "Bearer TOKEN"
+HEADERS: "Authorization": "Bearer TOKEN DEL ADMIN"
 
 Respuesta:
 
@@ -185,7 +186,7 @@ MÉTODO: GET
 
 Respuesta:
 
-- Un array de objetos con los eventos y datos de \_id, name, description y date de los eventos más proximos, en este caso limitado a 3 resultados.
+- Un array de objetos con los eventos y datos de \_id, name, description y date de los eventos más proximos, limitado a 3 resultados.
 
 ```json
 [
@@ -266,13 +267,14 @@ Respuesta:
 URL: /api/events/date
 
 req.query.from-> fecha desde la que se quiere buscar
+
 req.query.to-> fecha hasta la que se quiere buscar
 
 MÉTODO: GET
 
 Respuesta:
 
-- Un objeto o array de objetos con el o los eventos y datos del evento o de los eventos contenidos entre las fechas indicadas.
+- Un objeto o array de objetos con el o los eventos y datos del evento o de los eventos contenidos entre las fechas indicadas. Ejempo: from 2025-02-01 to: 202445-02-30
 
 ```json
 [

@@ -104,7 +104,7 @@ const deleteEventById = async (req, res) => {
 };
 
 const updateEventById = async (req, res) => {
-    console.log("update");
+
     try {
         const id = req.params.id;
         const event = req.body;
@@ -128,8 +128,6 @@ const updateEventById = async (req, res) => {
 
 const getUpcomingEvents = async (req, res) => {
 
-    console.log("getUpcomingEvents");
-
     try {
     
     // busca en la BD los eventos mostrando _id, name, description y date ordenados de manera ascendente y devolviendo los los 3 primeros, por lo que devuelve los eventos próximos.
@@ -147,8 +145,6 @@ const getUpcomingEvents = async (req, res) => {
 };
 
 const getBySportType = async (req, res) => {
-
-    console.log("getBySportType");
 
     try {
         
@@ -177,7 +173,6 @@ const getBySportType = async (req, res) => {
 };
 
 const getByDateRange = async (req, res) =>{
-    console.log("getByDateRange");
 
     const { from, to } = req.query;
 
@@ -195,8 +190,6 @@ const getByDateRange = async (req, res) =>{
     return res.status(200).json(filteredDates);
 
 };
-
-
 
 
 
