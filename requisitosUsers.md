@@ -77,7 +77,7 @@ Respuesta:
 
 # A tener en cuenta
 
-- el role está definado por defecto como organizador
+- el role está definido por defecto como organizador
 
 - El tiempo de validez del Token está establecido en 30 min
 
