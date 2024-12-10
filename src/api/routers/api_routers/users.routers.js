@@ -2,7 +2,7 @@ const express = require ("express");
 const router = express.Router();
 
 const { register, login, getProfile } = require("../../controllers/users.controllers");
-const { checkToken, checkTokenAdmin } = require("../../middlewares/auth");
+const { checkToken } = require("../../middlewares/auth");
 
 router.post("/register", register);
 router.post("/login", login);
